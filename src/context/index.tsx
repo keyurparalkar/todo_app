@@ -14,11 +14,12 @@ export type TaskBoardActionProps = {
   type: string;
   payload?: any;
 };
+export const generateId = () => Math.trunc(Math.random() * 1000);
 
 const initialState: TaskBoardProps = {
   todo: [
     {
-      id: Math.trunc(Math.random() * 1000),
+      id: generateId(),
       name: "TODO TASK",
       deadline: "22/10/2023",
       description:
@@ -27,7 +28,7 @@ const initialState: TaskBoardProps = {
   ],
   inProgress: [
     {
-      id: Math.trunc(Math.random() * 1000),
+      id: generateId(),
       name: "IN_PROGRESS TASK",
       deadline: "22/10/2023",
       description:
@@ -36,7 +37,7 @@ const initialState: TaskBoardProps = {
   ],
   completed: [
     {
-      id: Math.trunc(Math.random() * 1000),
+      id: generateId(),
       name: "COMPLETED TASK",
       deadline: "22/10/2023",
       description:
@@ -56,12 +57,11 @@ export const boardReducer = (
 ) => {
   switch (action.type) {
     case ADD_TASK_TO_PIPELINE:
-      const lastIndex = state[action.payload.key].length - 1;
       return {
         ...state,
         [action.payload.key]: [
           ...state[action.payload.key],
-          { ...action.payload.data, id: lastIndex + 1 },
+          { ...action.payload.data, id: generateId() },
         ],
       };
 
