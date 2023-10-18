@@ -10,7 +10,7 @@ import { ADD_TASK_TO_PIPELINE, UPDATE_TASK } from "../context/actions";
 import { TaskProps } from "../context";
 import dayjs from "dayjs";
 
-type ModalProps = {
+export type ModalProps = {
   open: boolean;
   handleClose: () => void;
   pipeline: string;
@@ -92,6 +92,7 @@ const TaskModal = ({
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      data-testid="task-modal"
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h5" component="h2">
@@ -120,6 +121,7 @@ const TaskModal = ({
           <Box mt={1} mb={2}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
+                data-testid="date-picker"
                 value={payload.data.deadline}
                 onChange={(value) => handleFieldUpdate("deadline", value)}
               />
@@ -136,7 +138,11 @@ const TaskModal = ({
               <VisuallyHiddenInput type="file" />
             </Button>
           </Box>
-          <Button variant="contained" onClick={onSubmit}>
+          <Button
+            data-testid="submit-test"
+            variant="contained"
+            onClick={onSubmit}
+          >
             {operation === "ADD" ? "Create" : "Update "} Task
           </Button>
         </Box>
