@@ -75,7 +75,7 @@ const PipeLine = ({ pLine, tasks }: PipeLineProps) => {
       <div onDrop={onDrop} onDragOver={onDragOver}>
         <Paper
           sx={{
-            height: "50vh",
+            height: "70vh",
             width: 220,
             padding: "1rem",
             overflow: "auto",
