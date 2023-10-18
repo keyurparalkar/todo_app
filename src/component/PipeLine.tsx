@@ -1,11 +1,18 @@
-import { Add } from "@mui/icons-material";
-import { Grid, IconButton, Paper } from "@mui/material";
+import { Add, Sort, SortByAlpha } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Paper,
+  Typography,
+} from "@mui/material";
 import { useContext, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { BoardContext, BoardDispatchContext, TaskProps } from "../context";
 import AddTaskModal from "./AddTaskModal";
 import Task from "./Task";
-import { MOVE_TASK } from "../context/actions";
+import { MOVE_TASK, SORT_PIPELINE } from "../context/actions";
 
 export const StyledAddButton = styled(IconButton)({
   width: "100%",
@@ -26,6 +33,14 @@ const PipeLine = ({ pLine, tasks }: PipeLineProps) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const onSort = () => {
+    dispatch({
+      type: SORT_PIPELINE,
+      payload: {
+        source: pLine,
+      },
+    });
+  };
   return (
     <Grid item>
       <div
@@ -55,7 +70,6 @@ const PipeLine = ({ pLine, tasks }: PipeLineProps) => {
         }}
         onDragOver={(e) => e.preventDefault()}
       >
-        {pLine}
         <Paper
           sx={{
             height: "50vh",
@@ -66,6 +80,24 @@ const PipeLine = ({ pLine, tasks }: PipeLineProps) => {
               theme.palette.mode === "dark" ? "#1A2027" : "#fff",
           }}
         >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography
+              variant="subtitle1"
+              fontWeight={800}
+              component="div"
+              display="inline"
+            >
+              {pLine}
+            </Typography>
+            <IconButton onClick={onSort}>
+              <SortByAlpha />
+            </IconButton>
+          </Box>
+
           {tasks.map((task) => (
             <div
               draggable={true}

@@ -1,5 +1,5 @@
 import { createContext, Dispatch, Reducer, useReducer } from "react";
-import { ADD_TASK_TO_PIPELINE, MOVE_TASK } from "./actions";
+import { ADD_TASK_TO_PIPELINE, MOVE_TASK, SORT_PIPELINE } from "./actions";
 
 export type TaskProps = {
   id: number;
@@ -56,7 +56,7 @@ export const boardReducer = (
   action: TaskBoardActionProps
 ) => {
   switch (action.type) {
-    case ADD_TASK_TO_PIPELINE:
+    case ADD_TASK_TO_PIPELINE: {
       return {
         ...state,
         [action.payload.key]: [
@@ -64,8 +64,9 @@ export const boardReducer = (
           { ...action.payload.data, id: generateId() },
         ],
       };
+    }
 
-    case MOVE_TASK:
+    case MOVE_TASK: {
       const { source, destination, nextSourceList, nextDestinationList } =
         action.payload;
       return {
@@ -73,7 +74,19 @@ export const boardReducer = (
         [source]: nextSourceList,
         [destination]: nextDestinationList,
       };
+    }
 
+    case SORT_PIPELINE: {
+      const { source } = action.payload;
+      const arrayToBeSorted = [...state[source]];
+      return {
+        ...state,
+        [source]: arrayToBeSorted.sort((a, b) => {
+          if (a.name && b.name) return b.name.localeCompare(a.name);
+          else return -1;
+        }),
+      };
+    }
     default:
       return state;
   }
