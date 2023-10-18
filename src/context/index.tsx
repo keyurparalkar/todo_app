@@ -1,5 +1,10 @@
 import { createContext, Dispatch, Reducer, useReducer } from "react";
-import { ADD_TASK_TO_PIPELINE, MOVE_TASK, SORT_PIPELINE } from "./actions";
+import {
+  ADD_PIPELINE,
+  ADD_TASK_TO_PIPELINE,
+  MOVE_TASK,
+  SORT_PIPELINE,
+} from "./actions";
 
 export type TaskProps = {
   id: number;
@@ -86,6 +91,10 @@ export const boardReducer = (
           else return -1;
         }),
       };
+    }
+
+    case ADD_PIPELINE: {
+      return { ...state, [action.payload]: [] };
     }
     default:
       return state;

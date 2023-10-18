@@ -1,14 +1,18 @@
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import "./App.css";
 import Board from "./component/Board";
+import StatusModal from "./component/StatusModal";
 
 function App() {
   return (
-    <Container maxWidth="lg" style={{ backgroundColor: "#dfdfdf" }}>
-      <Typography variant="h2" gutterBottom>
-        Task board
-      </Typography>
+    <Container maxWidth="lg" sx={{ backgroundColor: "#dfdfdf" }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography variant="h2" gutterBottom>
+          Task board
+        </Typography>
+        <StatusModal />
+      </Box>
       <Board />
     </Container>
   );

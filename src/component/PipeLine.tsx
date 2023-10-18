@@ -1,12 +1,5 @@
-import { Add, Sort, SortByAlpha } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Add, SortByAlpha } from "@mui/icons-material";
+import { Box, Grid, IconButton, Paper, Typography } from "@mui/material";
 import { useContext, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { BoardContext, BoardDispatchContext, TaskProps } from "../context";
