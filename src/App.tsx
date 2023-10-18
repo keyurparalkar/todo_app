@@ -6,7 +6,10 @@ import StatusModal from "./component/StatusModal";
 
 function App() {
   return (
-    <Container maxWidth="lg" sx={{ backgroundColor: "#dfdfdf" }}>
+    <Container
+      maxWidth="lg"
+      sx={{ backgroundColor: "#dfdfdf", height: "90vh" }}
+    >
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="h2" gutterBottom>
           Task board

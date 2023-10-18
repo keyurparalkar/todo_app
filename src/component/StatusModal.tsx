@@ -5,8 +5,6 @@ import { useContext, useRef, useState } from "react";
 import { BoardDispatchContext } from "../context";
 import { ADD_PIPELINE } from "../context/actions";
 
-// import { TaskProps } from "../context";
-
 const style = {
   position: "absolute",
   top: "50%",

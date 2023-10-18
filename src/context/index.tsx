@@ -1,7 +1,9 @@
+import dayjs from "dayjs";
 import { createContext, Dispatch, Reducer, useReducer } from "react";
 import {
   ADD_PIPELINE,
   ADD_TASK_TO_PIPELINE,
+  DELETE_TASK,
   MOVE_TASK,
   SORT_PIPELINE,
 } from "./actions";
@@ -10,7 +12,7 @@ export type TaskProps = {
   id: number;
   name?: string;
   description?: string;
-  deadline?: string;
+  deadline?: dayjs.Dayjs;
   attachment?: string;
 };
 export type TaskBoardProps = Record<string, TaskProps[] | []>;
@@ -26,7 +28,7 @@ const initialState: TaskBoardProps = {
     {
       id: generateId(),
       name: "TODO TASK",
-      deadline: "22/10/2023",
+      deadline: dayjs(),
       description:
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
     },
@@ -35,7 +37,7 @@ const initialState: TaskBoardProps = {
     {
       id: generateId(),
       name: "IN_PROGRESS TASK",
-      deadline: "22/10/2023",
+      deadline: dayjs(),
       description:
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
     },
@@ -44,7 +46,7 @@ const initialState: TaskBoardProps = {
     {
       id: generateId(),
       name: "COMPLETED TASK",
-      deadline: "22/10/2023",
+      deadline: dayjs(),
       description:
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
     },
@@ -95,6 +97,14 @@ export const boardReducer = (
 
     case ADD_PIPELINE: {
       return { ...state, [action.payload]: [] };
+    }
+
+    case DELETE_TASK: {
+      const { source, id } = action.payload;
+      return {
+        ...state,
+        [source]: state[source].filter((item) => item.id !== id),
+      };
     }
     default:
       return state;

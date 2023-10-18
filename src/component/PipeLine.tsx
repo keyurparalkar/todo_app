@@ -1,6 +1,6 @@
 import { Add, SortByAlpha } from "@mui/icons-material";
 import { Box, Grid, IconButton, Paper, Typography } from "@mui/material";
-import { useContext, useState } from "react";
+import { DragEvent, useContext, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { BoardContext, BoardDispatchContext, TaskProps } from "../context";
 import AddTaskModal from "./AddTaskModal";
@@ -26,6 +26,37 @@ const PipeLine = ({ pLine, tasks }: PipeLineProps) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const onDrop = (e: DragEvent<HTMLDivElement>) => {
+    try {
+      const { pLine: source, task } = JSON.parse(
+        e.dataTransfer.getData("text")
+      );
+      const nextSourceList = boardData[source].filter(
+        (item) => item.id !== task.id
+      );
+      const nextDestinationList = [task, ...boardData[pLine]];
+
+      dispatch({
+        type: MOVE_TASK,
+        payload: {
+          source,
+          destination: pLine,
+          nextSourceList,
+          nextDestinationList,
+        },
+      });
+      e.preventDefault();
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const onDragOver = (e: DragEvent<HTMLDivElement>) => e.preventDefault();
+
+  const onDragStart = (e: DragEvent<HTMLDivElement>, task: TaskProps) => {
+    e.dataTransfer.setData("text", JSON.stringify({ pLine, task }));
+  };
+
   const onSort = () => {
     dispatch({
       type: SORT_PIPELINE,
@@ -34,35 +65,10 @@ const PipeLine = ({ pLine, tasks }: PipeLineProps) => {
       },
     });
   };
+
   return (
     <Grid item>
-      <div
-        onDrop={(e) => {
-          try {
-            const { pLine: source, task } = JSON.parse(
-              e.dataTransfer.getData("text")
-            );
-            const nextSourceList = boardData[source].filter(
-              (item) => item.id !== task.id
-            );
-            const nextDestinationList = [task, ...boardData[pLine]];
-
-            dispatch({
-              type: MOVE_TASK,
-              payload: {
-                source,
-                destination: pLine,
-                nextSourceList,
-                nextDestinationList,
-              },
-            });
-            e.preventDefault();
-          } catch (err) {
-            throw err;
-          }
-        }}
-        onDragOver={(e) => e.preventDefault()}
-      >
+      <div onDrop={onDrop} onDragOver={onDragOver}>
         <Paper
           sx={{
             height: "50vh",
@@ -94,12 +100,12 @@ const PipeLine = ({ pLine, tasks }: PipeLineProps) => {
           {tasks.map((task) => (
             <div
               draggable={true}
-              onDragStart={(e) => {
-                e.dataTransfer.setData("text", JSON.stringify({ pLine, task }));
-              }}
+              onDragStart={(e: DragEvent<HTMLDivElement>) =>
+                onDragStart(e, task)
+              }
               key={`task-${task.id}`}
             >
-              <Task {...task} />
+              <Task {...task} pLine={pLine} />
             </div>
           ))}
           <StyledAddButton aria-label="delete" onClick={handleOpen}>
