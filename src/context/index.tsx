@@ -6,6 +6,7 @@ import {
   DELETE_TASK,
   MOVE_TASK,
   SORT_PIPELINE,
+  UPDATE_TASK,
 } from "./actions";
 
 export type TaskProps = {
@@ -68,7 +69,7 @@ export const boardReducer = (
         ...state,
         [action.payload.key]: [
           ...state[action.payload.key],
-          { ...action.payload.data, id: generateId() },
+          { ...action.payload.data },
         ],
       };
     }
@@ -105,6 +106,28 @@ export const boardReducer = (
         ...state,
         [source]: state[source].filter((item) => item.id !== id),
       };
+    }
+
+    case UPDATE_TASK: {
+      /**
+       * Get task's current index
+       * Update it at that index
+       * return the state
+       */
+      const { id, description, deadline, name } = action.payload.data;
+      const key = action.payload.key;
+      const clonedState = { ...state };
+      const taskIndex = clonedState[key].findIndex((item) => item.id === id);
+      clonedState[key][taskIndex] = {
+        id,
+        name,
+        description,
+        deadline,
+      };
+
+      console.log(clonedState[key][taskIndex]);
+
+      return clonedState;
     }
     default:
       return state;

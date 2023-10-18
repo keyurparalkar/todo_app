@@ -5,15 +5,17 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { UploadFile } from "@mui/icons-material";
 import { ChangeEvent, useContext, useState } from "react";
-import { BoardDispatchContext } from "../context";
-import { ADD_TASK_TO_PIPELINE } from "../context/actions";
-
-// import { TaskProps } from "../context";
+import { BoardDispatchContext, generateId } from "../context";
+import { ADD_TASK_TO_PIPELINE, UPDATE_TASK } from "../context/actions";
+import { TaskProps } from "../context";
+import dayjs from "dayjs";
 
 type ModalProps = {
   open: boolean;
   handleClose: () => void;
   pipeline: string;
+  operation: "ADD" | "UPDATE";
+  task?: TaskProps;
 };
 
 const style = {
@@ -47,19 +49,29 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const AddTaskModal = ({ open, pipeline, handleClose }: ModalProps) => {
+const TaskModal = ({
+  open,
+  pipeline,
+  handleClose,
+  operation,
+  task,
+}: ModalProps) => {
   const dispatch = useContext(BoardDispatchContext);
   const [payload, setPayload] = useState({
     data: {
-      name: "",
-      description: "",
-      deadline: "",
-      attachment: "",
+      id: operation === "ADD" ? generateId() : task?.id,
+      name: operation === "ADD" ? "" : task?.name,
+      description: operation === "ADD" ? "" : task?.description,
+      deadline: operation === "ADD" ? dayjs() : task?.deadline,
+      attachment: operation === "ADD" ? "" : task?.attachment,
     },
-    key: "",
+    key: operation === "ADD" ? "" : pipeline,
   });
 
-  const handleFieldUpdate = (key: string, value: string) => {
+  const handleFieldUpdate = (
+    key: string,
+    value: string | dayjs.Dayjs | null
+  ) => {
     setPayload({
       key: pipeline,
       data: { ...payload.data, [key]: value },
@@ -67,7 +79,10 @@ const AddTaskModal = ({ open, pipeline, handleClose }: ModalProps) => {
   };
 
   const onSubmit = () => {
-    dispatch({ type: ADD_TASK_TO_PIPELINE, payload });
+    dispatch({
+      type: operation === "ADD" ? ADD_TASK_TO_PIPELINE : UPDATE_TASK,
+      payload,
+    });
     handleClose();
   };
 
@@ -80,12 +95,13 @@ const AddTaskModal = ({ open, pipeline, handleClose }: ModalProps) => {
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h5" component="h2">
-          Add a task
+          {operation === "ADD" ? "Add" : "Update"} a task
         </Typography>
         <Box mt={2} display="flex" flexDirection="column">
           <TextField
             label="Task name"
             variant="outlined"
+            value={payload.data.name}
             onChange={(
               e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
             ) => handleFieldUpdate("name", e.target.value)}
@@ -96,6 +112,7 @@ const AddTaskModal = ({ open, pipeline, handleClose }: ModalProps) => {
             minRows={4}
             label="Task description"
             variant="outlined"
+            value={payload.data.description}
             onChange={(
               e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
             ) => handleFieldUpdate("description", e.target.value)}
@@ -103,9 +120,8 @@ const AddTaskModal = ({ open, pipeline, handleClose }: ModalProps) => {
           <Box mt={1} mb={2}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                onChange={(value) =>
-                  handleFieldUpdate("deadline", String(value))
-                }
+                value={payload.data.deadline}
+                onChange={(value) => handleFieldUpdate("deadline", value)}
               />
             </LocalizationProvider>
           </Box>
@@ -121,7 +137,7 @@ const AddTaskModal = ({ open, pipeline, handleClose }: ModalProps) => {
             </Button>
           </Box>
           <Button variant="contained" onClick={onSubmit}>
-            Create Task
+            {operation === "ADD" ? "Create" : "Update "} Task
           </Button>
         </Box>
       </Box>
@@ -129,4 +145,4 @@ const AddTaskModal = ({ open, pipeline, handleClose }: ModalProps) => {
   );
 };
 
-export default AddTaskModal;
+export default TaskModal;

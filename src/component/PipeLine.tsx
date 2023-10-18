@@ -3,9 +3,10 @@ import { Box, Grid, IconButton, Paper, Typography } from "@mui/material";
 import { DragEvent, useContext, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { BoardContext, BoardDispatchContext, TaskProps } from "../context";
-import AddTaskModal from "./AddTaskModal";
+import AddTaskModal from "./TaskModal";
 import Task from "./Task";
 import { MOVE_TASK, SORT_PIPELINE } from "../context/actions";
+import dayjs from "dayjs";
 
 export const StyledAddButton = styled(IconButton)({
   width: "100%",
@@ -31,6 +32,9 @@ const PipeLine = ({ pLine, tasks }: PipeLineProps) => {
       const { pLine: source, task } = JSON.parse(
         e.dataTransfer.getData("text")
       );
+      // Make sure to parse the deadline to dayjs object:
+      task.deadline = dayjs(task.deadline);
+
       const nextSourceList = boardData[source].filter(
         (item) => item.id !== task.id
       );
@@ -115,6 +119,7 @@ const PipeLine = ({ pLine, tasks }: PipeLineProps) => {
             open={open}
             handleClose={handleClose}
             pipeline={pLine}
+            operation="ADD"
           />
         </Paper>
       </div>
