@@ -1,5 +1,5 @@
 import { createContext, Dispatch, Reducer, useReducer } from "react";
-import { ADD_TASK_TO_PIPELINE } from "./actions";
+import { ADD_TASK_TO_PIPELINE, MOVE_TASK } from "./actions";
 
 export type TaskProps = {
   id: number;
@@ -18,8 +18,8 @@ export type TaskBoardActionProps = {
 const initialState: TaskBoardProps = {
   todo: [
     {
-      id: 1,
-      name: "Apply for Jobs",
+      id: Math.trunc(Math.random() * 1000),
+      name: "TODO TASK",
       deadline: "22/10/2023",
       description:
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
@@ -27,8 +27,8 @@ const initialState: TaskBoardProps = {
   ],
   inProgress: [
     {
-      id: 1,
-      name: "Apply for Jobs",
+      id: Math.trunc(Math.random() * 1000),
+      name: "IN_PROGRESS TASK",
       deadline: "22/10/2023",
       description:
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
@@ -36,8 +36,8 @@ const initialState: TaskBoardProps = {
   ],
   completed: [
     {
-      id: 1,
-      name: "Apply for Jobs",
+      id: Math.trunc(Math.random() * 1000),
+      name: "COMPLETED TASK",
       deadline: "22/10/2023",
       description:
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
@@ -56,7 +56,23 @@ export const boardReducer = (
 ) => {
   switch (action.type) {
     case ADD_TASK_TO_PIPELINE:
-      return state;
+      const lastIndex = state[action.payload.key].length - 1;
+      return {
+        ...state,
+        [action.payload.key]: [
+          ...state[action.payload.key],
+          { ...action.payload.data, id: lastIndex + 1 },
+        ],
+      };
+
+    case MOVE_TASK:
+      const { source, destination, nextSourceList, nextDestinationList } =
+        action.payload;
+      return {
+        ...state,
+        [source]: nextSourceList,
+        [destination]: nextDestinationList,
+      };
 
     default:
       return state;
