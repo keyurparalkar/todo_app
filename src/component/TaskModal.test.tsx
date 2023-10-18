@@ -26,7 +26,7 @@ describe("unit testing taskmodal", () => {
       dayjs().format("MM/DD/YYYY")
     );
 
-    userEvent.click(screen.getByTestId("submit-test"));
+    userEvent.click(screen.getByTestId("test-submit"));
 
     expect(props.handleClose).toBeCalled();
   });
@@ -61,7 +61,7 @@ describe("unit testing taskmodal", () => {
       dayjs().format("MM/DD/YYYY")
     );
 
-    userEvent.click(screen.getByTestId("submit-test"));
+    userEvent.click(screen.getByTestId("test-submit"));
 
     expect(props.handleClose).toBeCalled();
   });

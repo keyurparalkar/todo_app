@@ -112,7 +112,7 @@ const PipeLine = ({ pLine, tasks }: PipeLineProps) => {
               <Task {...task} pLine={pLine} />
             </div>
           ))}
-          <StyledAddButton aria-label="delete" onClick={handleOpen}>
+          <StyledAddButton onClick={handleOpen}>
             <Add />
           </StyledAddButton>
           <AddTaskModal

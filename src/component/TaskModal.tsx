@@ -139,7 +139,7 @@ const TaskModal = ({
             </Button>
           </Box>
           <Button
-            data-testid="submit-test"
+            data-testid="test-submit"
             variant="contained"
             onClick={onSubmit}
           >

@@ -24,7 +24,7 @@ export type TaskBoardActionProps = {
 };
 export const generateId = () => Math.trunc(Math.random() * 1000);
 
-const initialState: TaskBoardProps = {
+export const initialState: TaskBoardProps = {
   todo: [
     {
       id: generateId(),
@@ -132,8 +132,6 @@ export const boardReducer = (
         description,
         deadline,
       };
-
-      console.log(clonedState[key][taskIndex]);
 
       return clonedState;
     }

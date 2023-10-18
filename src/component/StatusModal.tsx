@@ -33,7 +33,6 @@ const StatusModal = () => {
 
   const onSubmit = () => {
     if (inputRef.current) {
-      console.log(inputRef.current);
       dispatch({
         type: ADD_PIPELINE,
         payload: inputRef.current.value,
@@ -59,6 +58,7 @@ const StatusModal = () => {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        data-testid="status-modal"
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h5" component="h2">
@@ -73,7 +73,7 @@ const StatusModal = () => {
             />
 
             <Button variant="contained" onClick={onSubmit}>
-              Create Task
+              Create Status
             </Button>
           </Box>
         </Box>

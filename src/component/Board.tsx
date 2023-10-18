@@ -11,7 +11,6 @@ const Board = () => {
       {Object.entries(pipeLines).map(([pLine, tasks], index) => (
         <PipeLine key={`grid-${index}`} pLine={pLine} tasks={tasks} />
       ))}
-      <Grid item></Grid>
     </Grid>
   );
 };
