@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { createContext, Dispatch, Reducer, useReducer } from "react";
+import { createContext, Dispatch, Reducer, useEffect, useReducer } from "react";
 import {
   ADD_PIPELINE,
   ADD_TASK_TO_PIPELINE,
@@ -54,7 +54,15 @@ const initialState: TaskBoardProps = {
   ],
 };
 
-export const BoardContext = createContext<TaskBoardProps>(initialState);
+export const getInitialState = () => {
+  const local = localStorage.getItem("tasks");
+  if (local) {
+    return JSON.parse(local);
+  }
+  return initialState;
+};
+
+export const BoardContext = createContext<TaskBoardProps>(getInitialState());
 export const BoardDispatchContext = createContext<
   Dispatch<TaskBoardActionProps>
 >((() => undefined) as Dispatch<TaskBoardActionProps>);
@@ -137,7 +145,11 @@ export const boardReducer = (
 export const TaskBoardProvider = ({ children }: any) => {
   const [state, dispatch] = useReducer<
     Reducer<TaskBoardProps, TaskBoardActionProps>
-  >(boardReducer, initialState);
+  >(boardReducer, getInitialState());
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(state));
+  });
 
   return (
     <BoardContext.Provider value={state}>
